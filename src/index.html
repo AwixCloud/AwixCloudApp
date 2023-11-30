@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AwixCloud</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent scrolling */
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      nav {
+        height: 37px;
+        -webkit-app-region: drag;
+      }
+
+      webview {
+        flex-grow: 1;
+        width: 100%;
+        height: 100vh; /* Occupy full viewport height */
+        opacity: 0; /* Initially set opacity to 0 */
+      }
+
+      .loading-spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff; /* Set the background color as needed */
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+        </ul>
+      </div>
+    </nav>
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <webview id="myWebview" src="https://my.awixnodes.fun/"></webview>
+
+    <script>
+      const webview = document.getElementById('myWebview');
+      const loadingSpinner = document.querySelector('.loading-spinner');
+
+      webview.addEventListener('did-start-loading', () => {
+        loadingSpinner.style.display = 'flex'; // Show the loading spinner
+        fadeOut(webview); // Fade out the webview
+      });
+
+      webview.addEventListener('did-stop-loading', () => {
+        loadingSpinner.style.display = 'none'; // Hide the loading spinner
+        fadeIn(webview); // Fade in the webview
+      });
+
+      function fadeIn(element) {
+        let opacity = 0;
+        const intervalId = setInterval(() => {
+          if (opacity < 1) {
+            opacity += 0.1;
+            element.style.opacity = opacity;
+          } else {
+            clearInterval(intervalId);
+          }
+        }, 50);
+      }
+
+      function fadeOut(element) {
+        let opacity = 1;
+        const intervalId = setInterval(() => {
+          if (opacity > 0) {
+            opacity -= 0.1;
+            element.style.opacity = opacity;
+          } else {
+            clearInterval(intervalId);semyanov.saaryn@yandex.ru
+          }
+        }, 50);
+      }
+    </script>
+  </body>
+</html>
