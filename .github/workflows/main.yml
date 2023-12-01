@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-darwin:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,33 +21,73 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Wine
-        run: sudo apt-get update && sudo apt-get install -y wine
+      - name: Build application for Darwin
+        run: npm run package -- --arch="ia32,x64" --platform="darwin"
 
-      - name: Build application
-        run: npm run package -- --arch="ia32,x64,arm64" --platform="darwin,mas,linux,win32"
+      - name: Package application for Darwin
+        run: npm run make -- --arch="ia32,x64" --platform="darwin"
 
-      - name: Package application
-        run: npm run make -- --arch="ia32,x64,arm64" --platform="darwin,mas,linux,win32"
-
-      - name: Create release
-        id: create_release
+      - name: Create release for Darwin
+        id: create_release_darwin
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }} (Darwin)
           draft: false
           prerelease: false
 
-      - name: Upload artifact
-        id: upload_artifact
+      - name: Upload artifact for Darwin
+        id: upload_artifact_darwin
         uses: actions/upload-artifact@v2
         with:
-          name: Application
+          name: Application (Darwin)
           path: out/make
 
-      - name: Add artifact link to release description
+      - name: Add artifact link to release description for Darwin
         run: |
-          echo "Download the application artifact [here](https://github.com/${{ github.repository }}/releases/download/${{ steps.create_release.outputs.id }}/application.zip)." >> $GITHUB_ENV
+          echo "Download the application artifact [here](https://github.com/${{ github.repository }}/releases/download/${{ steps.create_release_darwin.outputs.id }}/application.zip)." >> $GITHUB_ENV
+
+  build-win32:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application for Win32
+        run: npm run package -- --arch="ia32,x64" --platform="win32"
+
+      - name: Package application for Win32
+        run: npm run make -- --arch="ia32,x64" --platform="win32"
+
+      - name: Create release for Win32
+        id: create_release_win32
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release ${{ github.run_number }} (Win32)
+          draft: false
+          prerelease: false
+
+      - name: Upload artifact for Win32
+        id: upload_artifact_win32
+        uses: actions/upload-artifact@v2
+        with:
+          name: Application (Win32)
+          path: out/make
+
+      - name: Add artifact link to release description for Win32
+        run: |
+          echo "Download the application artifact [here](https://github.com/${{ github.repository }}/releases/download/${{ steps.create_release_win32.outputs.id }}/application.zip)." >> $GITHUB_ENV
