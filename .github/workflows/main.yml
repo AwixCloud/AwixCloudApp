@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Wine
+        run: sudo apt-get update && sudo apt-get install -y wine
+
       - name: Build application for Darwin
         run: npm run package -- --arch="ia32,x64" --platform="darwin"
 
@@ -63,6 +66,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Install Wine
+        run: sudo apt-get update && sudo apt-get install -y wine
 
       - name: Build application for Win32
         run: npm run package -- --arch="ia32,x64" --platform="win32"
