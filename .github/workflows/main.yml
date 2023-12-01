@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Wine
+        run: sudo apt-get update && sudo apt-get install -y wine
+
       - name: Build application
         run: npm run package -- --arch="ia32,x64,arm64" --platform="darwin,mas,linux,win32"
 
