@@ -22,8 +22,13 @@ jobs:
         run: npm install
 
       - name: Install Wine
-        run: sudo apt-get update && sudo apt-get install -y wine && dpkg --add-architecture i386 && apt-get update && apt-get install wine32
-
+        run: |
+          apt-get update
+          apt-get install -y wine
+          dpkg --add-architecture i386
+          apt-get update
+          apt-get install -y wine32
+          
       - name: Build application for Darwin
         run: npm run package -- --arch="x64,arm64" --platform="darwin"
 
@@ -68,7 +73,12 @@ jobs:
         run: npm install
 
       - name: Install Wine
-        run: sudo apt-get update && sudo apt-get install -y wine && dpkg --add-architecture i386 && apt-get update && apt-get install wine32
+        run: |
+          apt-get update
+          apt-get install -y wine
+          dpkg --add-architecture i386
+          apt-get update
+          apt-get install -y wine32
 
       - name: Build application for Win32
         run: npm run package -- --arch="ia32,x64,arm64" --platform="win32"
